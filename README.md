@@ -1,8 +1,61 @@
+# rappel sur les pointeurs
+Dans l'exemple qui suit les variables du programme main ne sont pas modifiés dans ce scop:
+
+``` C
+
+short calcul(short a, short b)
+{
+
+    a *= 10;
+    b += 1;
+
+    return a+b;
+
+}
+
+int main()
+{
+    short a = 1, b = 3;
+
+    short c = calcul(a,b);
+
+    printf("a: %d", a); // affichera 1
+    printf("b: %d", b); // affichera 3
+}
+``` 
+Cependant, si on utilise les pointeurs on peut facilement modifier les valeurs a et b du programme main:
+
+- * déférencement, valeur
+- & référencement, adresse mémoire
+
+``` C
+// pointeur des valeurs *a et *b (récupération des valeurs de a et b)
+short calcul(short *a, short *b)
+{
+
+    *a *= 10;
+    *b += 1;
+
+    return *a + *b;
+
+}
+
+int main()
+{
+    short a = 1, b = 3;
+
+    short c = calcul(&a,&b); // on passe les adresses des valeurs a et b
+
+    printf("a: %d", a); // affichera 10
+    printf("b: %d", b); // affichera 4
+}
+``` 
+
 # Tableau
 
 - définition d'un tableau
 
-``` c
+```c
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -33,7 +86,7 @@ int main()
 
 Il faut passer un pointeur ou un tableau voir les deux définitions valides d'une telle fonction ci-dessous:
 
-```
+```c
 void show(int *tab, int max)
 {
     int i;
@@ -66,7 +119,7 @@ void show2(int tab[], int max)
 
 si le caractère de fin de ligne est oublié, c'est source de bug en C. Il a l'avantage de déterminer la fin d'une chaîne, pratique pour le parcours d'une chaîne de caractères.
 
-```
+``` c
 char str[6];
 str[0]='h';
 str[1]='e';
@@ -78,7 +131,7 @@ str[5]='\0';
 
 - ci-dessous deux manières de parcourir la chaîne str
 
-```
+``` c
 void main()
 {
 	int i;
@@ -95,9 +148,7 @@ void main()
 }
 
 ```
-
-- création d'une fonction qui compte le nombre de caractères dans une chaîne
-
+- création d'une fonction qui compte le nombre de caractères dans une chaîne.
 On passe un pointeur et une const ce qui permet de s'assurer que la chaîne ne sera pas modifier par la fonction elle-même.
 
 ```
@@ -116,9 +167,28 @@ int string_length(const char* str)
 // application
 
 char *str="arduino";
-// equivalent
-// char str[] = "arduino";
+// equivalent def tab
+// char str[] = "arduino"; // C add \0 automatic
 
-printf("%d", string_length(str));
+printf("%d", string_length(str)); // 7
+
+```
+
+## particularité des chaînes de caractères
+La déclaration suivante définie une chaîne de caractères en lecture seule
+
+``` C
+char * foo;
+
+// impossible de faire cela, déclenche une erreur de segmentation
+foo[0] = 'b';
+
+```
+Pour éviter ce genre de problème, il faut définir les chaînes de caractères en constante, dans ce cas c'est à la compilation que ça plante et donc c'est plus facile à corriger.
+``` C
+const char * foo;
+
+// ça plante à la compilation
+foo[0] = 'b';
 
 ```
